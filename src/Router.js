@@ -1,8 +1,9 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {LogBox, View, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
+import SplashScreen from 'react-native-splash-screen';
 
 import {styles} from './styles/router';
 
@@ -142,20 +143,26 @@ const HomeNav = () => (
   </Stack.Navigator>
 );
 
-const Router = () => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
-    initialRouteName="Main">
-    <Stack.Screen name="Login" component={Login} />
-    <Stack.Screen name="Register" component={Register} />
-    <Stack.Screen name="Forgot" component={Forgot} />
-    <Stack.Screen name="Main" component={TabNav} />
-    <Stack.Screen name="Payment1" component={Payment1} />
-    <Stack.Screen name="Payment2" component={Payment2} />
-    <Stack.Screen name="Payment3" component={Payment3} />
-  </Stack.Navigator>
-);
+const Router = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      initialRouteName="Main">
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="Forgot" component={Forgot} />
+      <Stack.Screen name="Main" component={TabNav} />
+      <Stack.Screen name="Payment1" component={Payment1} />
+      <Stack.Screen name="Payment2" component={Payment2} />
+      <Stack.Screen name="Payment3" component={Payment3} />
+    </Stack.Navigator>
+  );
+};
 
 export default Router;
