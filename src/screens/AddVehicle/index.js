@@ -50,16 +50,18 @@ const AddVehicle = props => {
     body.append('location_id', location);
     body.append('category_id', category);
     body.append('stock', stock);
-    body.append('vehiclePicture', [
-      {
-        uri: photo.uri,
-        name: photo.fileName,
-        type: photo.type,
-      },
-    ]);
+    body.append('vehiclePicture', {
+      uri: photo.uri,
+      name: photo.fileName,
+      type: photo.type,
+    });
     console.log(body);
+
     addVehicle(token, body)
-      .then(res => ToastAndroid.show('Add vehicle success', ToastAndroid.SHORT))
+      .then(res => {
+        props.navigation.navigate('Home');
+        ToastAndroid.show('Add vehicle success', ToastAndroid.SHORT);
+      })
       .catch(err => {
         console.log(err);
         ToastAndroid.show('Add vehicle fail', ToastAndroid.SHORT);

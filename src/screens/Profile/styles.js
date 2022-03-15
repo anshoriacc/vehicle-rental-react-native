@@ -59,6 +59,12 @@ export const styles = StyleSheet.create({
     borderRadius: 50,
   },
 
+  menu: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 20,
+  },
+
   modalView: {
     margin: 10,
     backgroundColor: 'white',

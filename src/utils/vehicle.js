@@ -22,16 +22,42 @@ export const searchVehicle = search => {
   return axios.get(URL);
 };
 
-export const addVehicle = (token, body) => {
+// export const addVehicle = (token, body) => {
+//   const URL = `${process.env.API_HOST}/vehicles`;
+//   return axios.post(URL, body, {
+//     headers: {'x-access-token': token},
+//   });
+// };
+
+// export const editVehicle = (token, body, vehicleId) => {
+//   const URL = `${process.env.API_HOST}/vehicles/${vehicleId}`;
+//   return axios.patch(URL, body, {headers: {'x-access-token': token}});
+// };
+
+export const addVehicle = async (token, body) => {
   const URL = `${process.env.API_HOST}/vehicles`;
-  return axios.post(URL, body, {
-    headers: {'x-access-token': token},
+  const res = await fetch(URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-access-token': token,
+    },
+    body: body,
   });
+  return res;
 };
 
-export const editVehicle = (token, body, vehicleId) => {
+export const editVehicle = async (token, body, vehicleId) => {
   const URL = `${process.env.API_HOST}/vehicles/${vehicleId}`;
-  return axios.patch(URL, body, {headers: {'x-access-token': token}});
+  const res = await fetch(URL, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-access-token': token,
+    },
+    body: body,
+  });
+  return res;
 };
 
 export const deleteVehicle = (token, vehicleId) => {

@@ -17,8 +17,7 @@ import {styles} from './styles';
 import {useSelector} from 'react-redux';
 import {editProfile} from '../../../utils/user';
 
-const addImage = require('../../../assets/images/add-photo.jpg');
-const addIcon = require('../../../assets/icons/add.png');
+const editIcon = require('../../../assets/icons/edit.png');
 const defaultImage = require('../../../assets/images/default-profile.jpg');
 
 const EditProfile = props => {
@@ -34,22 +33,25 @@ const EditProfile = props => {
 
   const submitHandler = () => {
     const body = new FormData();
-    body.append('name', name);
-    body.append('email', email);
-    body.append('phone', phone);
-    body.append('address', address);
-    body.append('profilePicture', {
-      uri: photo.uri,
-      name: photo.fileName,
-      type: photo.type,
-    });
+    name && body.append('name', name);
+    email && body.append('email', email);
+    phone && body.append('phone', phone);
+    address && body.append('address', address);
+    photo.uri &&
+      body.append('profilePicture', {
+        uri: photo.uri,
+        name: photo.fileName,
+        type: photo.type,
+      });
     console.log(body);
     editProfile(token, body)
-      .then(res =>
-        ToastAndroid.show('Edit profile success', ToastAndroid.SHORT),
-      )
+      .then(res => {
+        props.navigation.navigate('Profile');
+        ToastAndroid.show('Edit profile success', ToastAndroid.SHORT);
+      })
       .catch(err => {
         console.log(err);
+        console.log(body);
         ToastAndroid.show('Edit profile fail', ToastAndroid.SHORT);
       });
   };
@@ -75,12 +77,12 @@ const EditProfile = props => {
               photo.uri
                 ? {uri: photo.uri}
                 : props.route.params.profilePicture
-                ? props.route.params.profilePicture
+                ? {uri: props.route.params.profilePicture}
                 : defaultImage
             }
             style={styles.addImage}
           />
-          <Image source={addIcon} style={styles.addIcon} />
+          <Image source={editIcon} style={styles.addIcon} />
         </Pressable>
         <Text style={styles.label}>Name</Text>
         <TextInput

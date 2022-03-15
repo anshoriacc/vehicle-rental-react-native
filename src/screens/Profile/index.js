@@ -7,6 +7,7 @@ import {styles} from './styles';
 
 import {logoutAction} from '../../redux/actions/auth';
 import {detailProfile} from '../../utils/user';
+import {useIsFocused} from '@react-navigation/native';
 
 const defaultImage = require('../../assets/images/default-profile.jpg');
 
@@ -15,6 +16,7 @@ const Profile = props => {
   const [userData, setUserData] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const auth = useSelector(state => state.auth);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     auth.userData.token &&
@@ -24,7 +26,7 @@ const Profile = props => {
           console.log(res.data.data);
         })
         .catch(err => console.log(err));
-  }, [auth.userData.token]);
+  }, [auth.userData.token, isFocused]);
 
   const logoutHandler = () => {
     dispatch(logoutAction());
@@ -44,39 +46,43 @@ const Profile = props => {
         </View>
       ) : (
         <View style={styles.profileContainer}>
-          <View style={styles.profile}>
-            <Image source={defaultImage} style={styles.photoBackground} />
-            <Image
-              source={
-                !userData
-                  ? defaultImage
-                  : {
-                      uri: `${process.env.API_HOST}/${userData.photo}`,
-                    }
-              }
-              style={styles.photo}
-            />
-            <View style={styles.detail}>
-              <Text style={styles.name}>{userData && userData.name}</Text>
-              <Text style={styles.roles}>
-                {auth.userData.roles && auth.userData.roles === 1
-                  ? 'Owner'
-                  : 'Customer'}
-              </Text>
+          <View>
+            <View style={styles.profile}>
+              <Image source={defaultImage} style={styles.photoBackground} />
+              <Image
+                source={
+                  !userData
+                    ? defaultImage
+                    : {
+                        uri: `${process.env.API_HOST}/${userData.photo}`,
+                      }
+                }
+                style={styles.photo}
+              />
+              <View style={styles.detail}>
+                <Text style={styles.name}>{userData && userData.name}</Text>
+                <Text style={styles.roles}>
+                  {auth.userData.roles && auth.userData.roles === 1
+                    ? 'Owner'
+                    : 'Customer'}
+                </Text>
+              </View>
             </View>
+            <Pressable
+              style={styles.menu}
+              onPress={() =>
+                props.navigation.navigate('EditProfile', {
+                  name: userData.name,
+                  email: userData.email,
+                  phone: userData.phone,
+                  address: userData.address,
+                  profilePicture: userData.photo,
+                })
+              }>
+              <Text style={styles.buttonText}>Edit Profile</Text>
+              <Text style={styles.buttonText}>{`>`}</Text>
+            </Pressable>
           </View>
-          <Pressable
-            onPress={() =>
-              props.navigation.navigate('EditProfile', {
-                name: userData.name,
-                email: userData.email,
-                phone: userData.phone,
-                address: userData.address,
-                profilePicture: userData.photo,
-              })
-            }>
-            <Text style={styles.buttonText}>Edit Profile</Text>
-          </Pressable>
           <Pressable
             style={styles.button}
             onPress={() => setModalVisible(!modalVisible)}>

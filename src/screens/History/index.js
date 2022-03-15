@@ -5,15 +5,21 @@ import {
   Pressable,
   ActivityIndicator,
   Image,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 import {useIsFocused} from '@react-navigation/native';
+import Modal from 'react-native-modal';
 
 import {styles} from './styles';
 
-import {history, historyAdmin} from '../../utils/reservation';
+import {
+  deleteReservation,
+  history,
+  historyAdmin,
+} from '../../utils/reservation';
 
 const defaultImage = require('../../assets/images/default-vehicle.jpg');
 
@@ -24,6 +30,9 @@ const History = props => {
   });
   const auth = useSelector(state => state.auth);
   const isFocused = useIsFocused();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [ids, setIds] = useState([]);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     !auth.userData.token &&
@@ -45,7 +54,7 @@ const History = props => {
           // console.log(historyData);
         })
         .catch(err => console.log(err));
-  }, [auth.userData, isFocused]);
+  }, [auth.userData, isFocused, reload]);
 
   return (
     <View style={styles.container}>
@@ -71,7 +80,15 @@ const History = props => {
               <Text>No history found</Text>
             ) : (
               historyData.data.map(transaction => (
-                <View style={styles.card} key={transaction.id}>
+                <Pressable
+                  onLongPress={() => {
+                    if (auth.userData.roles === 1) {
+                      setModalVisible(true);
+                      setIds([transaction.id]);
+                    }
+                  }}
+                  style={styles.card}
+                  key={transaction.id}>
                   <Image
                     source={defaultImage}
                     style={styles.vehicleImageBackground}
@@ -97,12 +114,47 @@ const History = props => {
                     <Text style={styles.price}>{transaction.payment}</Text>
                     <Text style={styles.textGreen}>Has been returned</Text>
                   </View>
-                </View>
+                </Pressable>
               ))
             )}
           </ScrollView>
         </>
       )}
+      <Modal
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(!modalVisible)}>
+        <View style={styles.modalView}>
+          <Text>Delete item?</Text>
+          <View style={styles.modalButtons}>
+            <Pressable
+              style={[styles.modalButton, styles.logoutButton]}
+              onPress={() => {
+                deleteReservation(auth.userData.token, {ids})
+                  .then(res => {
+                    setReload(!reload);
+                    ToastAndroid.show(
+                      'Success delete reservation',
+                      ToastAndroid.SHORT,
+                    );
+                  })
+                  .catch(err =>
+                    ToastAndroid.show(
+                      'Fail delete reservation',
+                      ToastAndroid.SHORT,
+                    ),
+                  );
+                setModalVisible(!modalVisible);
+              }}>
+              <Text style={styles.textStyle}>Delete</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.modalButton, styles.cancelButton]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Cancel</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

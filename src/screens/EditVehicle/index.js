@@ -32,31 +32,22 @@ const EditVehicle = props => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const submitHandler = () => {
-    // if (
-    //   !photo.uri ||
-    //   !name ||
-    //   !price ||
-    //   !description ||
-    //   location < 1 ||
-    //   category < 1
-    // ) {
-    //   return ToastAndroid.show('Fill input form!', ToastAndroid.SHORT);
-    // }
     const body = new FormData();
     ToastAndroid.show('good!', ToastAndroid.SHORT);
-    body.append('name', name);
-    body.append('price', Number(price));
-    body.append('description', description);
-    body.append('location_id', location);
-    body.append('category_id', category);
-    body.append('stock', stock);
-    body.append('vehiclePicture', [
-      {
-        uri: photo.uri,
-        name: photo.fileName,
-        type: photo.type,
-      },
-    ]);
+    name && body.append('name', name);
+    price && body.append('price', Number(price));
+    description && body.append('description', description);
+    location && body.append('location_id', location);
+    category && body.append('category_id', category);
+    stock && body.append('stock', stock);
+    photo.uri &&
+      body.append('vehiclePicture', [
+        {
+          uri: photo.uri,
+          name: photo.fileName,
+          type: photo.type,
+        },
+      ]);
     console.log(body);
     editVehicle(token, body, 8)
       .then(res =>
