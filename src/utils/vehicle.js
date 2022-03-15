@@ -23,8 +23,10 @@ export const searchVehicle = search => {
 };
 
 export const addVehicle = (token, body) => {
-  const URL = `${process.env.API_HOST}/vehicles/`;
-  return axios.post(URL, body, {headers: {'x-access-token': token}});
+  const URL = `${process.env.API_HOST}/vehicles`;
+  return axios.post(URL, body, {
+    headers: {'x-access-token': token},
+  });
 };
 
 export const editVehicle = (token, body, vehicleId) => {

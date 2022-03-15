@@ -5,11 +5,12 @@ import {
   Pressable,
   ScrollView,
   Image,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
-import {connect, useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {styles} from './styles';
 
@@ -29,15 +30,14 @@ const Detail = props => {
   const [returnDate, setReturnDate] = useState(new Date());
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
-
+  const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
-
-  // console.log(props.route.params.id);
 
   useEffect(() => {
     getVehicleDetail(props.route.params.id)
       .then(res => {
         setVehicleDetail({data: res.data.result.data[0], isSuccess: true});
+        console.log(res.data.result.data[0]);
       })
       .catch(err => console.log(err));
   }, [props.route.params.id]);
@@ -150,7 +150,7 @@ const Detail = props => {
                 />
               </Pressable>
             </View>
-            {props.auth.userData.roles !== 1 && (
+            {auth.userData.roles !== 1 && (
               <Pressable
                 style={styles.reservation}
                 onPress={() => {
@@ -161,8 +161,14 @@ const Detail = props => {
                     returnDate: moment(returnDate).format('YYYY-MM-DD'),
                   };
 
-                  !props.auth.isFulfilled && props.navigation.navigate('Login');
-                  if (props.auth.isFulfilled) {
+                  if (!auth.isFulfilled) {
+                    ToastAndroid.show(
+                      'Login as a customer first.',
+                      ToastAndroid.SHORT,
+                    );
+                    props.navigation.navigate('Login');
+                  }
+                  if (auth.isFulfilled) {
                     dispatch(reservationBody(body));
                     props.navigation.navigate('Payment1', {
                       photo:
@@ -172,21 +178,28 @@ const Detail = props => {
                       subTotal: `Rp. ${numberWithPeriod(
                         counter * vehicleDetail.data.price,
                       )}`,
+                      total: counter * vehicleDetail.data.price,
                     });
                   }
                 }}>
                 <Text style={styles.reservationText}>Reservation</Text>
               </Pressable>
             )}
-            {props.auth.userData.roles === 1 && (
-              <Pressable
-                style={styles.reservation}
-                onPress={() => {
-                  !props.auth.isFulfilled && props.navigation.navigate('Login');
-                }}>
-                <Text style={styles.reservationText}>Edit Vehicle</Text>
-              </Pressable>
-            )}
+            {auth.userData.roles === 1 &&
+              auth.userData.id == vehicleDetail.data.user_id && (
+                <Pressable
+                  style={styles.reservation}
+                  onPress={() =>
+                    props.navigation.navigate('EditVehicle', {
+                      name: vehicleDetail.data.name,
+                      price: vehicleDetail.data.price,
+                      description: vehicleDetail.data.description,
+                      stock: counter,
+                    })
+                  }>
+                  <Text style={styles.reservationText}>Edit Vehicle</Text>
+                </Pressable>
+              )}
             {/* <Button title="Open" onPress={() => setOpen1(true)} /> */}
             <DatePicker
               modal
@@ -221,10 +234,4 @@ const Detail = props => {
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
-
-export default connect(mapStateToProps)(Detail);
+export default Detail;

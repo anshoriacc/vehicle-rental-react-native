@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const login = body => {
-  const URL = `${process.env.API_HOST}/auth`;
+  const URL = `${process.env.API_HOST}/auth/login`;
   return axios.post(URL, body);
 };
 

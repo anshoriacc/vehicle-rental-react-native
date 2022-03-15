@@ -4,9 +4,11 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
+  Modal,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import {connect, useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {styles} from './styles';
 
@@ -16,6 +18,7 @@ const Login = props => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const dispatch = useDispatch();
+  const auth = useSelector(state => state.auth);
 
   const loginHandler = () => {
     const body = {
@@ -27,15 +30,24 @@ const Login = props => {
   };
 
   useEffect(() => {
-    if (props.auth.isFulfilled) {
+    if (auth.isFulfilled) {
       props.navigation.navigate('Main');
-      console.log('login success');
+      ToastAndroid.showWithGravity(
+        'Login success!',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
     }
 
-    if (props.auth.isRejected) {
+    if (auth.isRejected) {
+      ToastAndroid.showWithGravity(
+        'Login failed!',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
       console.log('login failed');
     }
-  }, [props.auth]);
+  }, [auth]);
 
   return (
     <View style={styles.container}>
@@ -52,16 +64,17 @@ const Login = props => {
               onChangeText={text => setEmail(text)}
               style={styles.form}
               placeholder="Email"
-              placeholderTextColor="#fff"
+              // placeholderTextColor="#fff"
             />
             <TextInput
               onChangeText={text => setPassword(text)}
               style={styles.form}
               placeholder="Password"
               secureTextEntry={true}
-              placeholderTextColor="#fff"
+              // placeholderTextColor="#fff"
             />
-            <TouchableOpacity onPress={() => props.navigation.navigate('Forgot')}>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate('Forgot')}>
               <Text style={[styles.textWhite, styles.linkText]}>
                 Forgot Password?
               </Text>
@@ -71,7 +84,8 @@ const Login = props => {
             </TouchableOpacity>
             <View style={[styles.register]}>
               <Text style={styles.textWhite}>Don't have account? </Text>
-              <TouchableOpacity onPress={() => props.navigation.navigate('Register')}>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate('Register')}>
                 <Text style={[styles.linkText, styles.textWhite]}>
                   Register Now
                 </Text>
@@ -84,10 +98,4 @@ const Login = props => {
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
-
-export default connect(mapStateToProps)(Login);
+export default Login;

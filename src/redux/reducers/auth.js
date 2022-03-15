@@ -25,9 +25,9 @@ const authReducer = (prevState = initialState, action) => {
       const data = action.payload.data;
       const userData = {
         ...prevState.userData,
-        token: data.result.data.token,
-        id: data.result.data.id,
-        roles: data.result.data.role_id,
+        token: data.data.token,
+        id: data.data.id,
+        roles: data.data.role_id,
       };
       return {
         ...prevState,

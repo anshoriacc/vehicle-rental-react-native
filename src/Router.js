@@ -12,11 +12,15 @@ import Category from './screens/Category';
 import Search from './screens/Search';
 import History from './screens/History';
 import Chat from './screens/Chat';
+import ChatRoom from './screens/Chat/ChatRoom';
 import Profile from './screens/Profile';
+import EditProfile from './screens/Profile/Edit';
 import Login from './screens/Login';
 import Register from './screens/Register';
 import Forgot from './screens/Forgot';
 import Detail from './screens/Detail';
+import AddVehicle from './screens/AddVehicle';
+import EditVehicle from './screens/EditVehicle';
 import Payment1 from './screens/Payment/payment1';
 import Payment2 from './screens/Payment/payment2';
 import Payment3 from './screens/Payment/payment3';
@@ -140,6 +144,8 @@ const HomeNav = () => (
     <Stack.Screen name="Category" component={Category} />
     <Stack.Screen name="Search" component={Search} />
     <Stack.Screen name="Detail" component={Detail} />
+    <Stack.Screen name="AddVehicle" component={AddVehicle} />
+    <Stack.Screen name="EditVehicle" component={EditVehicle} />
   </Stack.Navigator>
 );
 
@@ -158,6 +164,8 @@ const Router = () => {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Forgot" component={Forgot} />
       <Stack.Screen name="Main" component={TabNav} />
+      <Stack.Screen name="ChatRoom" component={ChatRoom} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="Payment1" component={Payment1} />
       <Stack.Screen name="Payment2" component={Payment2} />
       <Stack.Screen name="Payment3" component={Payment3} />

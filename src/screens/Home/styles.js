@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     color: '#999999',
     padding: 10,
     borderRadius: 10,
-    marginRight: 20,
+    // marginRight: 20,
     textDecorationLine: 'none',
   },
 
@@ -64,6 +64,10 @@ export const styles = StyleSheet.create({
     fontWeight: '900',
   },
 
+  bottomSection: {
+    marginTop: 110,
+  },
+
   buttonAdd: {
     margin: 20,
     height: 50,
@@ -90,7 +94,6 @@ export const styles = StyleSheet.create({
   },
 
   vehicleSection: {
-    paddingTop: 120,
     paddingBottom: 10,
   },
 

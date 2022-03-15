@@ -24,7 +24,6 @@ const Forgot = ({navigation}) => {
             <TextInput
               style={styles.form}
               placeholder="Enter your email address"
-              placeholderTextColor="#fff"
             />
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>Submit</Text>
@@ -32,9 +31,7 @@ const Forgot = ({navigation}) => {
             <View style={[styles.register]}>
               <Text style={styles.textWhite}>Back to </Text>
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text style={[styles.linkText, styles.textWhite]}>
-                  Login
-                </Text>
+                <Text style={[styles.linkText, styles.textWhite]}>Login</Text>
               </TouchableOpacity>
             </View>
           </View>

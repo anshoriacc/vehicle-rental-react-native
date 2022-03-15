@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {Picker as SelectPicker} from '@react-native-picker/picker';
 import axios from 'axios';
+import {useSelector} from 'react-redux';
 
 import {styles} from './styles';
 
@@ -28,9 +29,10 @@ const Home = ({navigation}) => {
     isSuccess: false,
   });
   const [search, setSearch] = useState(null);
+  const auth = useSelector(state => state.auth);
 
   const searchHandler = () => {
-    navigation.navigate('Search', {search});
+    search && navigation.navigate('Search', {search});
   };
 
   useEffect(() => {
@@ -65,11 +67,11 @@ const Home = ({navigation}) => {
         <View style={styles.form}>
           <TextInput
             onChangeText={text => setSearch(text)}
-            placeholder="Search"
+            placeholder="Search Vehicle"
             placeholderTextColor="#999999"
             style={styles.input}
           />
-          <View style={styles.pickerWrapper}>
+          {/* <View style={styles.pickerWrapper}>
             <SelectPicker
               placeholder="select"
               style={styles.picker}
@@ -79,188 +81,193 @@ const Home = ({navigation}) => {
               <SelectPicker.Item label="car" value="car" />
               <SelectPicker.Item label="motorbike" value="motorbike" />
             </SelectPicker>
-          </View>
+          </View> */}
         </View>
-        {/* <Text>{search}</Text> */}
         <Pressable style={styles.button} onPress={searchHandler}>
           <Text style={styles.buttonText}>Search Vehicle</Text>
         </Pressable>
       </View>
-      {vehicleData.isSuccess ? (
-        <>
-          <View style={styles.vehicleSection}>
-            <Pressable style={styles.buttonAdd}>
-              <Text style={styles.buttonAddText}>Add Vehicle</Text>
-            </Pressable>
-            {/* Popular */}
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Popular</Text>
-              <Pressable
-                onPress={() =>
-                  navigation.navigate('Category', {
-                    category: 'popular',
-                  })
-                }>
-                <Text style={styles.sectionLink}>View more {'>'}</Text>
-              </Pressable>
-            </View>
-            <ScrollView horizontal={true} style={styles.horizontal}>
-              {vehicleData.popular.map(vehicle => (
+      <View style={styles.bottomSection}>
+        {auth.userData.roles === 1 && (
+          <Pressable
+            onPress={() => navigation.navigate('AddVehicle')}
+            style={styles.buttonAdd}>
+            <Text style={styles.buttonAddText}>Add Vehicle</Text>
+          </Pressable>
+        )}
+        {vehicleData.isSuccess ? (
+          <>
+            <View style={styles.vehicleSection}>
+              {/* Popular */}
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Popular</Text>
                 <Pressable
-                  key={vehicle.id}
                   onPress={() =>
-                    navigation.navigate('Detail', {
-                      id: vehicle.id,
+                    navigation.navigate('Category', {
+                      category: 'popular',
                     })
                   }>
-                  <Image
-                    source={defaultImage}
-                    style={styles.productImageBackground}
-                  />
-                  <Image
-                    source={
-                      (vehicle.photo && {
-                        uri: `${process.env.API_HOST}/${
-                          JSON.parse(vehicle.photo)[0]
-                        }`,
-                      }) ||
-                      defaultImage
-                    }
-                    style={styles.productImage}
-                  />
+                  <Text style={styles.sectionLink}>View more {'>'}</Text>
                 </Pressable>
-              ))}
-            </ScrollView>
+              </View>
+              <ScrollView horizontal={true} style={styles.horizontal}>
+                {vehicleData.popular.map(vehicle => (
+                  <Pressable
+                    key={vehicle.id}
+                    onPress={() =>
+                      navigation.navigate('Detail', {
+                        id: vehicle.id,
+                      })
+                    }>
+                    <Image
+                      source={defaultImage}
+                      style={styles.productImageBackground}
+                    />
+                    <Image
+                      source={
+                        (vehicle.photo && {
+                          uri: `${process.env.API_HOST}/${
+                            JSON.parse(vehicle.photo)[0]
+                          }`,
+                        }) ||
+                        defaultImage
+                      }
+                      style={styles.productImage}
+                    />
+                  </Pressable>
+                ))}
+              </ScrollView>
 
-            {/* Car */}
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Car</Text>
-              <Pressable
-                onPress={() =>
-                  navigation.navigate('Category', {
-                    category: 'car',
-                  })
-                }>
-                <Text style={styles.sectionLink}>View more {'>'}</Text>
-              </Pressable>
-            </View>
-            <ScrollView horizontal={true} style={styles.horizontal}>
-              {vehicleData.car.map(vehicle => (
+              {/* Car */}
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Car</Text>
                 <Pressable
-                  key={vehicle.id}
                   onPress={() =>
-                    navigation.navigate('Detail', {
-                      id: vehicle.id,
+                    navigation.navigate('Category', {
+                      category: 'car',
                     })
                   }>
-                  <Image
-                    source={defaultImage}
-                    style={styles.productImageBackground}
-                  />
-                  <Image
-                    source={
-                      (vehicle.photo && {
-                        uri: `${process.env.API_HOST}/${
-                          JSON.parse(vehicle.photo)[0]
-                        }`,
-                      }) ||
-                      defaultImage
-                    }
-                    style={styles.productImage}
-                  />
+                  <Text style={styles.sectionLink}>View more {'>'}</Text>
                 </Pressable>
-              ))}
-            </ScrollView>
+              </View>
+              <ScrollView horizontal={true} style={styles.horizontal}>
+                {vehicleData.car.map(vehicle => (
+                  <Pressable
+                    key={vehicle.id}
+                    onPress={() =>
+                      navigation.navigate('Detail', {
+                        id: vehicle.id,
+                      })
+                    }>
+                    <Image
+                      source={defaultImage}
+                      style={styles.productImageBackground}
+                    />
+                    <Image
+                      source={
+                        (vehicle.photo && {
+                          uri: `${process.env.API_HOST}/${
+                            JSON.parse(vehicle.photo)[0]
+                          }`,
+                        }) ||
+                        defaultImage
+                      }
+                      style={styles.productImage}
+                    />
+                  </Pressable>
+                ))}
+              </ScrollView>
 
-            {/* Motorbike */}
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Motorbike</Text>
-              <Pressable
-                onPress={() =>
-                  navigation.navigate('Category', {
-                    category: 'motorbike',
-                  })
-                }>
-                <Text style={styles.sectionLink}>View more {'>'}</Text>
-              </Pressable>
-            </View>
-            <ScrollView horizontal={true} style={styles.horizontal}>
-              {vehicleData.motorbike.map(vehicle => (
+              {/* Motorbike */}
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Motorbike</Text>
                 <Pressable
-                  key={vehicle.id}
                   onPress={() =>
-                    navigation.navigate('Detail', {
-                      id: vehicle.id,
-                    })
-                  }
-                  style={styles.cardContainer}>
-                  <Image
-                    source={defaultImage}
-                    style={styles.productImageBackground}
-                  />
-                  <Image
-                    source={
-                      (vehicle.photo && {
-                        uri: `${process.env.API_HOST}/${
-                          JSON.parse(vehicle.photo)[0]
-                        }`,
-                      }) ||
-                      defaultImage
-                    }
-                    style={styles.productImage}
-                  />
-                </Pressable>
-              ))}
-            </ScrollView>
-
-            {/* bike */}
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Bike</Text>
-              <Pressable
-                onPress={() =>
-                  navigation.navigate('Category', {
-                    category: 'bike',
-                  })
-                }>
-                <Text style={styles.sectionLink}>View more {'>'}</Text>
-              </Pressable>
-            </View>
-            <ScrollView horizontal={true} style={styles.horizontal}>
-              {vehicleData.bike.map(vehicle => (
-                <Pressable
-                  key={vehicle.id}
-                  onPress={() =>
-                    navigation.navigate('Detail', {
-                      id: vehicle.id,
+                    navigation.navigate('Category', {
+                      category: 'motorbike',
                     })
                   }>
-                  <Image
-                    source={defaultImage}
-                    style={styles.productImageBackground}
-                  />
-                  <Image
-                    source={
-                      (vehicle.photo && {
-                        uri: `${process.env.API_HOST}/${
-                          JSON.parse(vehicle.photo)[0]
-                        }`,
-                      }) ||
-                      defaultImage
-                    }
-                    style={styles.productImage}
-                  />
+                  <Text style={styles.sectionLink}>View more {'>'}</Text>
                 </Pressable>
-              ))}
-            </ScrollView>
-          </View>
-        </>
-      ) : (
-        <ActivityIndicator
-          size="large"
-          color="#FFCD61"
-          style={styles.loading}
-        />
-      )}
+              </View>
+              <ScrollView horizontal={true} style={styles.horizontal}>
+                {vehicleData.motorbike.map(vehicle => (
+                  <Pressable
+                    key={vehicle.id}
+                    onPress={() =>
+                      navigation.navigate('Detail', {
+                        id: vehicle.id,
+                      })
+                    }
+                    style={styles.cardContainer}>
+                    <Image
+                      source={defaultImage}
+                      style={styles.productImageBackground}
+                    />
+                    <Image
+                      source={
+                        (vehicle.photo && {
+                          uri: `${process.env.API_HOST}/${
+                            JSON.parse(vehicle.photo)[0]
+                          }`,
+                        }) ||
+                        defaultImage
+                      }
+                      style={styles.productImage}
+                    />
+                  </Pressable>
+                ))}
+              </ScrollView>
+
+              {/* bike */}
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Bike</Text>
+                <Pressable
+                  onPress={() =>
+                    navigation.navigate('Category', {
+                      category: 'bike',
+                    })
+                  }>
+                  <Text style={styles.sectionLink}>View more {'>'}</Text>
+                </Pressable>
+              </View>
+              <ScrollView horizontal={true} style={styles.horizontal}>
+                {vehicleData.bike.map(vehicle => (
+                  <Pressable
+                    key={vehicle.id}
+                    onPress={() =>
+                      navigation.navigate('Detail', {
+                        id: vehicle.id,
+                      })
+                    }>
+                    <Image
+                      source={defaultImage}
+                      style={styles.productImageBackground}
+                    />
+                    <Image
+                      source={
+                        (vehicle.photo && {
+                          uri: `${process.env.API_HOST}/${
+                            JSON.parse(vehicle.photo)[0]
+                          }`,
+                        }) ||
+                        defaultImage
+                      }
+                      style={styles.productImage}
+                    />
+                  </Pressable>
+                ))}
+              </ScrollView>
+            </View>
+          </>
+        ) : (
+          <ActivityIndicator
+            size="large"
+            color="#FFCD61"
+            style={styles.loading}
+          />
+        )}
+      </View>
     </ScrollView>
   );
 };

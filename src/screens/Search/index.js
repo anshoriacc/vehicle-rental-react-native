@@ -26,7 +26,7 @@ const Search = props => {
     searchVehicle(props.route.params.search)
       .then(res => {
         setVehicleData({data: res.data.result.data, isSuccess: true});
-        console.log(vehicleData);
+        // console.log(vehicleData);
       })
       .catch(err => console.log(err));
   }, [props.route.params.search]);

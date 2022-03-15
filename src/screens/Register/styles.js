@@ -30,9 +30,8 @@ export const styles = StyleSheet.create({
 
   form: {
     marginBottom: 20,
-    backgroundColor: '#ffffff80',
+    backgroundColor: '#ffffffcc',
     borderRadius: 7,
-    color: 'white',
     padding: 10,
     height: 50,
   },

@@ -1,6 +1,7 @@
-import {View, Text, Pressable, Image} from 'react-native';
+import {View, Text, Pressable, Image, ToastAndroid} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useDispatch, connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import Modal from 'react-native-modal';
 
 import {styles} from './styles';
 
@@ -11,20 +12,29 @@ const defaultImage = require('../../assets/images/default-profile.jpg');
 
 const Profile = props => {
   const dispatch = useDispatch();
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
+  const auth = useSelector(state => state.auth);
 
   useEffect(() => {
-    detailProfile(props.auth.userData.token)
-      .then(res => {
-        setUserData(res.data.result.data[0]);
-        console.log(res.data.result.data[0]);
-      })
-      .catch(err => console.log(err));
-  }, [props.auth]);
+    auth.userData.token &&
+      detailProfile(auth.userData.token)
+        .then(res => {
+          setUserData(res.data.data);
+          console.log(res.data.data);
+        })
+        .catch(err => console.log(err));
+  }, [auth.userData.token]);
+
+  const logoutHandler = () => {
+    dispatch(logoutAction());
+    setUserData(null);
+    ToastAndroid.show('Logout success!', ToastAndroid.SHORT);
+  };
 
   return (
     <View style={styles.container}>
-      {!props.auth.isFulfilled ? (
+      {!auth.userData.token ? (
         <View style={styles.loginContainer}>
           <Pressable
             style={styles.button}
@@ -38,37 +48,66 @@ const Profile = props => {
             <Image source={defaultImage} style={styles.photoBackground} />
             <Image
               source={
-                (userData.photo && {
-                  uri: `${process.env.API_HOST}/${userData.photo}`,
-                }) ||
-                defaultImage
+                !userData
+                  ? defaultImage
+                  : {
+                      uri: `${process.env.API_HOST}/${userData.photo}`,
+                    }
               }
               style={styles.photo}
             />
             <View style={styles.detail}>
-              <Text style={styles.name}>{userData.name && userData.name}</Text>
+              <Text style={styles.name}>{userData && userData.name}</Text>
               <Text style={styles.roles}>
-                {props.auth.userData.roles && props.auth.userData.roles === 1
+                {auth.userData.roles && auth.userData.roles === 1
                   ? 'Owner'
                   : 'Customer'}
               </Text>
             </View>
           </View>
           <Pressable
+            onPress={() =>
+              props.navigation.navigate('EditProfile', {
+                name: userData.name,
+                email: userData.email,
+                phone: userData.phone,
+                address: userData.address,
+                profilePicture: userData.photo,
+              })
+            }>
+            <Text style={styles.buttonText}>Edit Profile</Text>
+          </Pressable>
+          <Pressable
             style={styles.button}
-            onPress={() => dispatch(logoutAction())}>
+            onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.buttonText}>Logout</Text>
           </Pressable>
         </View>
       )}
+      <Modal
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(!modalVisible)}>
+        <View style={styles.modalView}>
+          <Text>Are you sure want to logout?</Text>
+          <View style={styles.modalButtons}>
+            <Pressable
+              style={[styles.modalButton, styles.logoutButton]}
+              onPress={() => {
+                logoutHandler();
+                setModalVisible(!modalVisible);
+              }}>
+              <Text style={styles.textStyle}>Logout</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.modalButton, styles.cancelButton]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Cancel</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    auth: state.auth,
-  };
-};
-
-export default connect(mapStateToProps)(Profile);
+export default Profile;

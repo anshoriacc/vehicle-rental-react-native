@@ -4,6 +4,7 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
@@ -25,8 +26,14 @@ const Register = props => {
     };
 
     register(body)
-      .then(res => props.navigation.navigate('Login'))
-      .catch(err => console.log(err));
+      .then(res => {
+        ToastAndroid.show('Registration success.', ToastAndroid.CENTER);
+        props.navigation.navigate('Login');
+      })
+      .catch(err => {
+        ToastAndroid.show('Registration fail.', ToastAndroid.CENTER);
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -55,20 +62,17 @@ const Register = props => {
               onChangeText={text => setName(text)}
               style={styles.form}
               placeholder="Name"
-              placeholderTextColor="#fff"
             />
             <TextInput
               onChangeText={text => setEmail(text)}
               style={styles.form}
               placeholder="Email"
-              placeholderTextColor="#fff"
             />
             <TextInput
               onChangeText={text => setPassword(text)}
               style={styles.form}
               placeholder="Password"
               secureTextEntry={true}
-              placeholderTextColor="#fff"
             />
             <TouchableOpacity style={styles.button} onPress={registerHandler}>
               <Text style={styles.buttonText}>Register</Text>

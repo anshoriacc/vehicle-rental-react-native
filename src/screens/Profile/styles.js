@@ -58,4 +58,39 @@ export const styles = StyleSheet.create({
     resizeMode: 'cover',
     borderRadius: 50,
   },
+
+  modalView: {
+    margin: 10,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+  modalButtons: {
+    flexDirection: 'row',
+  },
+
+  modalButton: {
+    margin: 5,
+    padding: 10,
+    borderRadius: 10,
+  },
+
+  logoutButton: {
+    backgroundColor: 'red',
+  },
+
+  cancelButton: {
+    backgroundColor: '#eeeeee',
+  },
 });

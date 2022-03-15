@@ -7,6 +7,24 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
 
+  loginContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+
+  button: {
+    backgroundColor: '#ffcd61',
+    borderRadius: 10,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  buttonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+
   screenTitle: {
     flexDirection: 'row',
     alignItems: 'flex-end',
