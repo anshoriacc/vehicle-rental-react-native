@@ -25,7 +25,7 @@ const Search = props => {
   useEffect(() => {
     searchVehicle(props.route.params.search)
       .then(res => {
-        setVehicleData({data: res.data.result.data, isSuccess: true});
+        setVehicleData({data: res.data.data, isSuccess: true});
         // console.log(vehicleData);
       })
       .catch(err => console.log(err));

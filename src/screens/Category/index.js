@@ -25,7 +25,7 @@ const Category = props => {
   useEffect(() => {
     getVehicle16(props.route.params.category)
       .then(res => {
-        setVehicleData({data: res.data.result.data, isSuccess: true});
+        setVehicleData({data: res.data.data, isSuccess: true});
         console.log(vehicleData);
       })
       .catch(err => console.log(err));

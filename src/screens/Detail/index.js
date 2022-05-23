@@ -36,8 +36,8 @@ const Detail = props => {
   useEffect(() => {
     getVehicleDetail(props.route.params.id)
       .then(res => {
-        setVehicleDetail({data: res.data.result.data[0], isSuccess: true});
-        console.log(res.data.result.data[0]);
+        setVehicleDetail({data: res.data.data, isSuccess: true});
+        console.log(res.data.data);
       })
       .catch(err => console.log(err));
   }, [props.route.params.id]);

@@ -99,6 +99,7 @@ const AddVehicle = props => {
         <Text style={styles.label}>Price</Text>
         <TextInput
           onChangeText={text => setPrice(text)}
+          keyboardType='numeric'
           placeholder="Price"
           style={styles.input}
         />

@@ -63,6 +63,7 @@ const Login = props => {
             <TextInput
               onChangeText={text => setEmail(text)}
               style={styles.form}
+              returnKeyType="next"
               placeholder="Email"
               // placeholderTextColor="#fff"
             />

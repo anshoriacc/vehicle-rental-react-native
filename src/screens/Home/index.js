@@ -46,10 +46,10 @@ const Home = ({navigation}) => {
       .then(
         axios.spread((res1, res2, res3, res4) => {
           setVehicleData({
-            popular: res1.data.result.data,
-            car: res2.data.result.data,
-            motorbike: res3.data.result.data,
-            bike: res4.data.result.data,
+            popular: res1.data.data,
+            car: res2.data.data,
+            motorbike: res3.data.data,
+            bike: res4.data.data,
             isSuccess: true,
           });
         }),
